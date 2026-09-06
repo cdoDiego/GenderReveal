@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Carrera de Bebés</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section id="vote-screen" class="screen active">
+  <h1>¿Quién va a ganar la carrera? 🍼</h1>
+  <p class="subtitle">Toca la foto del papá que crees que va a ganar</p>
+
+  <div class="vote-cards">
+    <button class="vote-card" id="vote-papa1" style="--team-color:#FF8A65">
+      <span class="photo-circle">
+        <span class="initials">P1</span>
+        <img class="face-mama" src="assets/mama.png" alt="Mamá" onerror="this.style.display='none'">
+      </span>
+      <span class="vote-name" id="name-papa1">Papá 1</span>
+    </button>
+
+    <button class="vote-card" id="vote-papa2" style="--team-color:#4DB6AC">
+      <span class="photo-circle">
+        <span class="initials">P2</span>
+        <img class="face-papa" src="assets/papa.png" alt="Papá" onerror="this.style.display='none'">
+      </span>
+      <span class="vote-name" id="name-papa2">Papá 2</span>
+    </button>
+  </div>
+
+  <button id="goto-race-btn" class="secret-btn" title="Modo carrera (tocar 3 veces)">▶</button>
+  <button id="reset-votes-btn" class="tiny-link">reiniciar votos</button>
+
+  <div id="thanks-overlay" class="overlay hidden">
+    <div class="thanks-box">¡Gracias por votar! 🎉</div>
+  </div>
+</section>
+
+<section id="race-screen" class="screen">
+  <div class="track-wrap">
+    <div class="bg-layer"><img class="bg-img" src="assets/fondo2.png" alt=""></div>
+
+    <div class="racer" id="racer1" style="--team-color:#FF8A65">
+      <span class="sonaja">🪇</span>
+      <div class="racer-img racer-sprite crawl-img crawl-sprite"></div>
+      <div class="racer-img racer-sprite cry-img cry-sprite hidden"></div>
+      <span class="face-overlay">
+        <span class="initials">P1</span>
+        <img class="face-mama" src="assets/mama.png" alt="" onerror="this.style.display='none'">
+      </span>
+    </div>
+
+    <div class="racer" id="racer2" style="--team-color:#4DB6AC">
+      <span class="sonaja">🪇</span>
+      <div class="racer-img racer-sprite crawl-img crawl-sprite"></div>
+      <div class="racer-img racer-sprite cry-img cry-sprite hidden"></div>
+      <span class="face-overlay">
+        <span class="initials">P2</span>
+        <img class="face-papa" src="assets/papa.png" alt="" onerror="this.style.display='none'">
+      </span>
+    </div>
+
+    <span class="dad-now-circle dad-now-1" style="--team-color:#FF8A65">
+      <span class="initials">P1</span>
+      <img class="face-mama" src="assets/mama.png" alt="" onerror="this.style.display='none'">
+    </span>
+    <span class="dad-now-circle dad-now-2" style="--team-color:#4DB6AC">
+      <span class="initials">P2</span>
+      <img class="face-papa" src="assets/papa.png" alt="" onerror="this.style.display='none'">
+    </span>
+  </div>
+
+  <button id="start-race-btn" class="start-btn">🏁 ¡Iniciar carrera!</button>
+  <button id="back-to-vote-btn" class="secret-btn" title="Volver a votar (tocar 3 veces)">◀</button>
+
+  <div id="result-overlay" class="overlay hidden">
+    <div class="result-box">
+      <div class="result-scores"><span id="score1">0</span> &nbsp;—&nbsp; <span id="score2">0</span></div>
+      <button id="reset-btn">Volver a votar</button>
+    </div>
+  </div>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>

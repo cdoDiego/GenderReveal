@@ -1,0 +1,352 @@
+:root {
+  --bg: #FFF8F0;
+  --ink: #3A3A3A;
+  --accent: #7E57C2;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.screen {
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.screen.active { display: flex; }
+
+/* ---------- Vote screen ---------- */
+
+h1 {
+  font-size: clamp(1.5rem, 5vw, 2.6rem);
+  text-align: center;
+  margin: 0 0 0.3em;
+  padding: 0 0.5em;
+}
+.subtitle {
+  text-align: center;
+  opacity: 0.7;
+  margin: 0 0 2em;
+  font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+}
+
+.vote-cards {
+  display: flex;
+  gap: clamp(1rem, 4vw, 3rem);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.vote-card {
+  background: var(--card-bg, white);
+  border: none;
+  border-radius: 24px;
+  padding: clamp(1rem, 3vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8em;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  width: clamp(150px, 30vw, 280px);
+}
+.vote-card:active { transform: scale(0.95); }
+
+.vote-name {
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  font-weight: 700;
+}
+
+.photo-circle, .dad-now-circle {
+  --size: clamp(90px, 18vw, 160px);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: var(--team-color, #ccc);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 4px solid white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+.photo-circle img, .dad-now-circle img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.initials {
+  color: white;
+  font-weight: 800;
+  font-size: 1.4rem;
+  z-index: 0;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.overlay.hidden { display: none; }
+.thanks-box, .result-box {
+  background: white;
+  padding: 2em 3em;
+  border-radius: 20px;
+  font-size: clamp(1.2rem, 4vw, 2rem);
+  font-weight: 700;
+  text-align: center;
+}
+
+.secret-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.06);
+  color: rgba(0,0,0,0.25);
+  font-size: 0.9rem;
+}
+.tiny-link {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  border: none;
+  background: none;
+  color: rgba(0,0,0,0.15);
+  font-size: 0.7rem;
+}
+
+/* ---------- Race screen ---------- */
+
+.track-wrap {
+  position: relative;
+  width: 94vw;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background: #DCEFDA;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.bg-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+.bg-img {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 150%;
+  width: auto;
+  max-width: none;
+  transform: translateX(0px);
+  transition: transform 1s linear, height 1s linear;
+}
+
+.dad-now-circle {
+  position: absolute;
+  right: 1.5%;
+  --size: clamp(60px, 9vh, 110px);
+  z-index: 1;
+}
+.dad-now-1 { top: 18%; }
+.dad-now-2 { bottom: 18%; }
+
+.racer {
+  --frame: clamp(140px, 21vh, 260px);
+  position: absolute;
+  left: 2%;
+  width: var(--frame);
+  aspect-ratio: 1;
+  z-index: 1;
+}
+/* Both racers stand on the same floor line of fondo2.png;
+   the small offset keeps them from fully overlapping side by side. */
+#racer1 { bottom: 16%; }
+#racer2 { bottom: 6%; }
+
+.racer-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+}
+.racer-img.hidden { display: none; }
+
+/* Pixel-art sprite sheets: 12 frames/row x 6 rows (Idle, Movement, Idle Sit, Cry, Feed, Poop) */
+.racer-sprite {
+  background-repeat: no-repeat;
+  background-position-x: 0;
+  background-size: calc(var(--frame) * 12) calc(var(--frame) * 6);
+  image-rendering: pixelated;
+}
+.crawl-sprite {
+  background-position-y: calc(var(--frame) * -1);
+  animation: sprite-step 1.2s steps(12) infinite;
+}
+.cry-sprite {
+  background-position-y: calc(var(--frame) * -3);
+  animation: sprite-step 1.2s steps(12) infinite;
+}
+@keyframes sprite-step {
+  from { background-position-x: 0; }
+  to { background-position-x: calc(var(--frame) * -12); }
+}
+#racer1 .crawl-sprite, #racer1 .cry-sprite {
+  background-image: url('assets/Human%20Baby%20Sprite%20Sheet.png');
+}
+#racer2 .crawl-sprite, #racer2 .cry-sprite {
+  background-image: url('assets/Human%20Baby%20Sprite%20Sheet%202.png');
+}
+
+/* No circle/background here: the face PNGs are already face-shaped cutouts,
+   so showing them raw (object-fit: contain) looks like a real floating head
+   instead of a photo cropped into an arbitrary circle. */
+.face-overlay {
+  --size: 52%;
+  position: absolute;
+  width: var(--size);
+  aspect-ratio: 1;
+  left: 61%;
+  top: 66%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  transition: left 0.15s ease, top 0.15s ease, width 0.15s ease;
+}
+.face-overlay img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+}
+.face-overlay .initials {
+  font-size: 0.7rem;
+  color: var(--team-color);
+  text-shadow: 0 1px 3px rgba(255,255,255,0.8);
+}
+
+/* Cry pose is upright and centered, so the overlay shifts to match its face */
+.racer.crying .face-overlay {
+  --size: 46%;
+  left: 55%;
+  top: 58%;
+}
+
+.racer::after {
+  content: "";
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.4rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.racer.celebrating::after { content: "🎉"; opacity: 1; }
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4%) rotate(-2deg); }
+}
+.racer.crawling { animation: bob 1.2s ease-in-out infinite; }
+
+/* Fast sprint: quicker leg cycle + quicker bob */
+.racer.fast-crawl .crawl-sprite { animation-duration: 0.6s; }
+.racer.fast-crawl { animation-duration: 0.7s; }
+
+/* Distracted with a sonaja: idle pose (sprite row 0) instead of crawling */
+.racer.distracted .crawl-sprite {
+  background-position-y: 0;
+  animation-duration: 1.8s;
+}
+.racer.distracted { animation: none; }
+
+.sonaja {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.6rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 4;
+}
+.sonaja.shaking { opacity: 1; animation: sonaja-shake 0.4s ease-in-out infinite; }
+@keyframes sonaja-shake {
+  0%, 100% { transform: translateX(-50%) rotate(-15deg); }
+  50% { transform: translateX(-50%) rotate(15deg); }
+}
+
+@keyframes celebrateBounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-18%) rotate(-8deg); }
+}
+.racer.celebrating { animation: celebrateBounce 0.5s ease-in-out infinite; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4%); }
+  75% { transform: translateX(4%); }
+}
+.racer.crying { animation: shake 0.25s ease-in-out infinite; }
+
+.start-btn {
+  margin-top: 1.5em;
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  font-weight: 700;
+  padding: 0.7em 1.6em;
+  border: none;
+  border-radius: 50px;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+}
+.start-btn.hidden { display: none; }
+
+.result-scores {
+  font-size: clamp(2rem, 8vw, 4rem);
+  margin-bottom: 0.6em;
+}
+#reset-btn {
+  font-size: 1rem;
+  padding: 0.6em 1.4em;
+  border-radius: 30px;
+  border: none;
+  background: var(--accent);
+  color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #1E1B24; --ink: #F0EAFB; }
+  .vote-card, .thanks-box, .result-box { background: #2B2733; }
+}
