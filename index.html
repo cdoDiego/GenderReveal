@@ -14,6 +14,7 @@
 
   <div class="vote-cards">
     <button class="vote-card" id="vote-papa1" style="--team-color:#FF8A65; --card-bg:#FFE1EC">
+      <img class="vote-mascot" src="assets/oso.png" alt="" aria-hidden="true" onerror="this.style.display='none'">
       <span class="photo-circle">
         <span class="initials">P1</span>
         <img class="face-mama" src="assets/mama.png" alt="Mamá" onerror="this.style.display='none'">
@@ -22,6 +23,7 @@
     </button>
 
     <button class="vote-card" id="vote-papa2" style="--team-color:#4DB6AC; --card-bg:#DCEEFF">
+      <img class="vote-mascot" src="assets/conejo.png" alt="" aria-hidden="true" onerror="this.style.display='none'">
       <span class="photo-circle">
         <span class="initials">P2</span>
         <img class="face-papa" src="assets/papa.png" alt="Papá" onerror="this.style.display='none'">
@@ -74,6 +76,10 @@
 
   <button id="start-race-btn" class="start-btn">🏁 ¡Iniciar carrera!</button>
   <button id="back-to-vote-btn" class="secret-btn" title="Volver a votar (tocar 3 veces)">◀</button>
+
+  <div id="countdown-overlay" class="overlay hidden">
+    <div class="countdown-number" id="countdown-number">3</div>
+  </div>
 
   <div id="result-overlay" class="overlay hidden">
     <div class="result-box">

@@ -51,6 +51,7 @@ h1 {
 }
 
 .vote-card {
+  position: relative;
   background: var(--card-bg, white);
   border: none;
   border-radius: 24px;
@@ -65,6 +66,19 @@ h1 {
   width: clamp(150px, 30vw, 280px);
 }
 .vote-card:active { transform: scale(0.95); }
+
+/* Mascots perched on the outer edge of each card, mostly hanging off the
+   side and just barely overlapping onto the card's own border. */
+.vote-mascot {
+  position: absolute;
+  top: 50%;
+  width: clamp(90px, 24vw, 170px);
+  z-index: 2;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.18));
+}
+#vote-papa1 .vote-mascot { left: 0; transform: translate(-85%, -50%); }
+#vote-papa2 .vote-mascot { right: 0; transform: translate(85%, -50%); }
 
 .vote-name {
   font-size: clamp(1rem, 3vw, 1.4rem);
@@ -107,6 +121,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 8;
 }
 .overlay.hidden { display: none; }
 .thanks-box, .result-box {
@@ -129,6 +144,7 @@ h1 {
   background: rgba(0,0,0,0.06);
   color: rgba(0,0,0,0.25);
   font-size: 0.9rem;
+  z-index: 5;
 }
 .tiny-link {
   position: absolute;
@@ -143,15 +159,13 @@ h1 {
 /* ---------- Race screen ---------- */
 
 .track-wrap {
-  position: relative;
-  width: 94vw;
-  height: 60vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   background: #DCEFDA;
-  border-radius: 20px;
   overflow: hidden;
+  z-index: 0;
 }
 
 .bg-layer {
@@ -181,17 +195,23 @@ h1 {
 .dad-now-2 { bottom: 18%; }
 
 .racer {
-  --frame: clamp(140px, 21vh, 260px);
+  /* Bounded by vw as well as vh: on a narrow/tall phone viewport, a
+     vh-only size becomes disproportionately wide and runs the sprite off
+     the right edge before it reaches the finish line. */
+  --frame: clamp(180px, min(36vh, 52vw), 400px);
   position: absolute;
   left: 2%;
   width: var(--frame);
   aspect-ratio: 1;
-  z-index: 1;
+  /* Above .dad-now-circle: the arriving baby's celebrate/cry pose must
+     stay visible instead of being hidden behind the goal circle. */
+  z-index: 2;
 }
-/* Both racers stand on the same floor line of fondo2.png;
-   the small offset keeps them from fully overlapping side by side. */
-#racer1 { bottom: 16%; }
-#racer2 { bottom: 6%; }
+/* Both racers stand on the same floor line of fondo2.png. racer1's gap is
+   expressed relative to --frame (not a fixed %) so the two never overlap
+   regardless of how big the sprite is sized. */
+#racer2 { bottom: 3%; }
+#racer1 { bottom: calc(3% + var(--frame) * 1.05); }
 
 .racer-img {
   position: absolute;
@@ -212,7 +232,7 @@ h1 {
 }
 .crawl-sprite {
   background-position-y: calc(var(--frame) * -1);
-  animation: sprite-step 1.2s steps(12) infinite;
+  animation: sprite-step var(--stride, 1.2s) steps(12) infinite;
 }
 .cry-sprite {
   background-position-y: calc(var(--frame) * -3);
@@ -274,15 +294,9 @@ h1 {
 }
 .racer.celebrating::after { content: "🎉"; opacity: 1; }
 
-@keyframes bob {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-4%) rotate(-2deg); }
-}
-.racer.crawling { animation: bob 1.2s ease-in-out infinite; }
-
-/* Fast sprint: quicker leg cycle + quicker bob */
-.racer.fast-crawl .crawl-sprite { animation-duration: 0.6s; }
-.racer.fast-crawl { animation-duration: 0.7s; }
+/* No vertical bob while crawling: the sprite sheet's own 12-frame walk
+   cycle already draws the crawling motion. Layering a bounce on top of it
+   reads as the baby hopping instead of crawling smoothly. */
 
 /* Distracted with a sonaja: idle pose (sprite row 0) instead of crawling */
 .racer.distracted .crawl-sprite {
@@ -291,20 +305,22 @@ h1 {
 }
 .racer.distracted { animation: none; }
 
+/* Held out in front of the baby (in the direction of travel) to distract it */
 .sonaja {
   position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 40%;
+  left: 96%;
+  transform-origin: top center;
+  transform: translateY(-50%) rotate(-15deg);
   font-size: 1.6rem;
   opacity: 0;
   transition: opacity 0.3s;
   z-index: 4;
 }
-.sonaja.shaking { opacity: 1; animation: sonaja-shake 0.4s ease-in-out infinite; }
+.sonaja.shaking { opacity: 1; animation: sonaja-shake 0.45s ease-in-out infinite; }
 @keyframes sonaja-shake {
-  0%, 100% { transform: translateX(-50%) rotate(-15deg); }
-  50% { transform: translateX(-50%) rotate(15deg); }
+  0%, 100% { transform: translateY(-50%) rotate(-20deg); }
+  50% { transform: translateY(-50%) rotate(10deg); }
 }
 
 @keyframes celebrateBounce {
@@ -321,7 +337,10 @@ h1 {
 .racer.crying { animation: shake 0.25s ease-in-out infinite; }
 
 .start-btn {
-  margin-top: 1.5em;
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  transform: translateX(-50%);
   font-size: clamp(1.1rem, 3vw, 1.6rem);
   font-weight: 700;
   padding: 0.7em 1.6em;
@@ -330,8 +349,26 @@ h1 {
   background: var(--accent);
   color: white;
   cursor: pointer;
+  z-index: 5;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
 }
 .start-btn.hidden { display: none; }
+
+/* ---------- Countdown ---------- */
+
+#countdown-overlay { z-index: 10; }
+.countdown-number {
+  font-size: clamp(4rem, 22vw, 11rem);
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  animation: countdown-pop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes countdown-pop {
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
 
 .result-scores {
   font-size: clamp(2rem, 8vw, 4rem);
