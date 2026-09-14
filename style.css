@@ -382,9 +382,3 @@ h1 {
   background: var(--accent);
   color: white;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root { --bg: #1E1B24; --ink: #F0EAFB; }
-  .thanks-box, .result-box { background: #2B2733; }
-  .vote-card { filter: brightness(0.75); }
-}
